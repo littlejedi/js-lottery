@@ -234,14 +234,34 @@ $(document).keypress(function (e){
 </textarea>
 <textarea name="teachers" rows="6" cols="84">
 马子明 
-郭楠 
-尹烨彬 
+郭楠
+尹烨彬
 张操
-苏义斌 
-戚焕震 
-王健沛 
-李叶 
-李海皋 
+苏义斌
+戚焕震
+王健沛
+李叶
+李海皋
+赵琳
+马子明 
+郭楠
+尹烨彬
+张操
+苏义斌
+戚焕震
+王健沛
+李叶
+李海皋
+赵琳
+马子明 
+郭楠
+尹烨彬
+张操
+苏义斌
+戚焕震
+王健沛
+李叶
+李海皋
 赵琳
 </textarea>
 
@@ -551,7 +571,7 @@ function on_rotate_start(){
 	game.rotate_index = 0;
 
 	// 打乱顺序
-	var currentCandidates;
+	/*var currentCandidates;
 	if (gamestep == 0) {
 		// 三等奖
 		if (game.results[game.step].length == 0) {
@@ -564,8 +584,10 @@ function on_rotate_start(){
 		currentCandidates = game.candidates.concat(game.guests);
 	} else {
 		currentCandidates = game.candidates;
-	}
-	array_shuffle(currentCandidates);
+	}*/
+	array_shuffle(game.candidates);
+	array_shuffle(game.guests);
+	array_shuffle(game.teachers);
 	
 	rotate_run();
 
@@ -606,6 +628,7 @@ function rotate_run(){
 	}
 
 	var arr = array_slice(currentCandidates, game.rotate_index, size);
+	//var arr2 = array_slice(game.candidates.concat(game.guests).concat(game.teachers), game.rotate_index, size);
 	$('#rolling_board').html(arr.join(' '));
 
 	game.rotate_index += num_a;
