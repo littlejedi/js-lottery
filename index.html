@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>ideawu - 年会抽奖软件, 摇奖软件, javascript抽奖, javascript摇奖</title>
+	<title>2016 STEMCLOUD Company Event</title>
 	<meta name="description" content="ideawu - 年会抽奖软件, 摇奖软件, javascript抽奖, javascript摇奖" />
 	<link rel="stylesheet" type="text/css" href="jquery-ui-1.7.2.custom.css" />
 	<link rel="stylesheet" type="text/css" href="style.css" />
@@ -10,6 +10,9 @@
 	<script type="text/javascript" src="jquery-ui-1.7.2.custom.min.js"></script>
 
 <style type="text/css">
+body{
+	font-family: 'Microsoft Yahei'
+}
 table{
 	margin: 12px auto;
 	border-collapse: collapse;
@@ -46,7 +49,7 @@ textarea{
 }
 
 #event_title{
-	color: #ff0;
+	color: #fff;
 	margin: 26px;
 	padding: 0;
 	font-size: 56px;
@@ -54,7 +57,6 @@ textarea{
 }
 #event_title span{
 	padding: 0 32px;
-	background: #03e;
 }
 
 #rolling_board{
@@ -117,10 +119,10 @@ textarea{
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
+	color:#000;
 }
 #print_box span{
 	margin: 4px;
-	color: #fff;
 	background: #36f;
 }
 </style>
@@ -183,36 +185,73 @@ $(document).keypress(function (e){
 
 <div id="tabs-2" style="background: #fff;">
 	<label>活动标题</label>
-	<div><input type="text" name="title" value="活动标题" /></div>
+	<div><input type="text" name="title" value="2016 STEMCLOUD" /></div>
 
 	<label>奖项设置</label>
 	<div>每行一个奖项, 格式为竖线分隔的: 奖项名|数量|每次抽几个|奖品</div>
 <textarea name="prizes" rows="6" cols="84">
-三等奖|4|2|美女1名/每人
-二等奖|2|2|100万美金/每人
-一等奖|1|1|10本世界名著/每人
+三等奖|4|1|欧乐B电动牙刷
+二等奖|3|1|MUJI中号香薰机香薰油套装 OR护肤品礼盒 OR  MUJI电水壶
+一等奖|2|1|Kindle阅读器
+特等奖|1|1|????
 </textarea>
 
 	<label>候选人列表</label>
 	<div>每行一人, 或半角逗号分隔</div>
 <textarea name="candidates" rows="6" cols="84">
-ideawu.net
-benegg
-Tom, Marry, Jim, Robin
-Lucy, Lily, Lilei, Hanmeimei
-Catherine, Linton, Lockwood
-Charly, Bill, Emily, Penny
-Rose, Jen, William, Philips
-Hitler, Stalin
+朱瑞东
+顾雷
+陈伊涵
+周兰兰
+王腾飞
+杨维
+雷川
+任静
+邹文静
+万杰
+吴铭
+李力哲
+胡兆祥
+叶明敬
+石晶
+邱源东
+陈程
+王玲玲
+张逸中
+王瑞
+吴思倩
+彭丽
+汤成龙
+唐坤
+许海东
+杜继晖
+吕月潇
+毛术人
+</textarea>
+<textarea name="guests" rows="6" cols="84">
+董老师
+徐老师
+</textarea>
+<textarea name="teachers" rows="6" cols="84">
+马子明 
+郭楠 
+尹烨彬 
+张操
+苏义斌 
+戚焕震 
+王健沛 
+李叶 
+李海皋 
+赵琳
 </textarea>
 
 	<label>跳动时间间隔</label>
-	<div><input type="text" name="interval" value="50" style="width: 50px;" /> ms</div>
+	<div><input type="text" name="interval" value="15" style="width: 50px;" /> ms</div>
 
 
 	<label>背景图片</label>
 	<div>可以输入图片链接使用网络上的图片, 也可以把图片拷贝到当前目录, 把图片文件名填入即可.</div>
-	<div><input name="background_image" type="text" value="1.jpg" /></div>
+	<div><input name="background_image" type="text" value="banner.jpg" /></div>
 
 
 	<p><input type="button" value="保存" onclick="save_setting()" /></p>
@@ -379,6 +418,8 @@ var Game = function(){
 
 	this.prizes = [];
 	this.candidates = [];
+	this.teachers = [];
+	this.guests = [];
 	this.results = [];
 
 	this.init = function(){
@@ -473,7 +514,7 @@ function on_close(){
 	str += '<span><b style="font-size: 62px; background: #36f;">抽奖结束</b><span><br/>';
 	str += '<br/><br/>';
 	str += '官方网站: ';
-	str += '<a href="' + 'http://ww' + 'w.ide' + 'awu.n' + 'et/' + 'bl' + 'og/"' + '>htt' + 'p://' + 'www.id' + 'eawu' + '.net/<' + '/a>';
+	str += '<a href="' + 'http://ww' + 'w.stemcloud.cn/<' + '/a>';
 	print_box(str);
 	$('#print_box').fadeIn('slow', function(){
 		$('#rotate_div').css('background', 'url(framework.gif)');
@@ -502,13 +543,29 @@ function on_step_close(){
 function on_rotate_start(){
 	$('#rolling_board').slideDown('normal');
 
+	var gamestep = game.step; // 三等奖 step 0 二等奖 step 1 一等奖 step 2 特等奖 step 3
+
 	game.interval = parseInt($('input[name=interval]').val());
 
 	game.stop = false;
 	game.rotate_index = 0;
 
 	// 打乱顺序
-	array_shuffle(game.candidates);
+	var currentCandidates;
+	if (gamestep == 0) {
+		// 三等奖
+		if (game.results[game.step].length == 0) {
+			currentCandidates = game.teachers;
+		} else {
+			currentCandidates = game.candidates.concat(game.guests);
+		}
+	} else if (gamestep == 1) {
+		// 二等奖
+		currentCandidates = game.candidates.concat(game.guests);
+	} else {
+		currentCandidates = game.candidates;
+	}
+	array_shuffle(currentCandidates);
 	
 	rotate_run();
 
@@ -532,7 +589,23 @@ function rotate_run(){
 		size = num_a;
 	}
 
-	var arr = array_slice(game.candidates, game.rotate_index, size);
+	var currentCandidates;
+	var gamestep = game.step; // 三等奖 step 0 二等奖 step 1 一等奖 step 2 特等奖 step 3
+	if (gamestep == 0) {
+		// 三等奖
+		if (game.results[game.step].length == 0) {
+			currentCandidates = game.teachers;
+		} else {
+			currentCandidates = game.candidates.concat(game.guests);
+		}
+	} else if (gamestep == 1) {
+		// 二等奖
+		currentCandidates = game.candidates.concat(game.guests);
+	} else {
+		currentCandidates = game.candidates;
+	}
+
+	var arr = array_slice(currentCandidates, game.rotate_index, size);
 	$('#rolling_board').html(arr.join(' '));
 
 	game.rotate_index += num_a;
@@ -642,8 +715,29 @@ function save_setting(){
 		game.candidates.push(p);
 	}
 
+	var ps = $.trim($('textarea[name=teachers]').val()).replace(/,/g, '\n').split('\n');
+	for(var i=0; i<ps.length; i++){
+		var p = $.trim(ps[i]);
+		if(p.length == 0){
+			continue;
+		}
+		game.teachers.push(p);
+	}
+
+
+    var ps = $.trim($('textarea[name=guests]').val()).replace(/,/g, '\n').split('\n');
+	for(var i=0; i<ps.length; i++){
+		var p = $.trim(ps[i]);
+		if(p.length == 0){
+			continue;
+		}
+		game.guests.push(p);
+	}
+
+
 	$('#event_title span').html($('input[name=title]').val());
 	$('#tabs-1').css('background', 'url(' + $('input[name=background_image]').val() + ') no-repeat');
+	$('#tabs-1').css('background-size', 'cover');
 
 	game.init();
 }
