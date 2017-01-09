@@ -641,6 +641,7 @@ function rotate_run(){
 		
 		game.results[game.step] = game.results[game.step].concat(arr);
 		game.candidates = array_del_all(game.candidates, arr);
+		game.guests = array_del_all(game.guests, arr);
 
 		show_results();
 		print_box('按回车继续');
